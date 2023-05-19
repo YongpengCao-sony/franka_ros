@@ -1,12 +1,16 @@
 <?xml version="1.0" ?>
 <launch>
-  <arg name="robot_ip" />
+  <arg name="robot_ip" default="192.168.15.203"/>
   <arg name="robot" default="panda" doc="choose your robot. Possible values: [panda, fr3]"/>
   <arg name="arm_id" default="$(arg robot)" />
   <arg name="load_gripper" default="true" />
   <arg name="xacro_args" default="" />
 
-  <param name="robot_description" command="$(find xacro)/xacro $(find franka_description)/robots/$(arg robot)/$(arg robot).urdf.xacro hand:=$(arg load_gripper) arm_id:=$(arg arm_id) $(arg xacro_args)"/>
+  <param name="robot_description" command="$(find xacro)/xacro '$(find shokunin_description)/xacros/robots/robot.xacro'
+        prefix:='$(arg robot_name)_robot/'
+        arm_type:='panda'
+        gripper_type:=$(arg gripper_type)
+        finger_type:=$(arg finger_type)" />
 
   <include file="$(find franka_gripper)/launch/franka_gripper.launch" if="$(arg load_gripper)">
     <arg name="robot_ip" value="$(arg robot_ip)" />
@@ -26,4 +30,10 @@
     <rosparam unless="$(arg load_gripper)" param="source_list">[franka_state_controller/joint_states] </rosparam>
     <param name="rate" value="30"/>
   </node>
+
+  <include file="$(find panda_moveit_config)/launch/demo.launch" pass_all_args="true">
+    <arg name="load_robot_description" value="false" />
+    <arg name="moveit_controller_manager" value="simple" />
+  </include>
+
 </launch>
