@@ -5,8 +5,13 @@
   <arg name="arm_id" default="$(arg robot)" />
   <arg name="load_gripper" default="false" />
   <arg name="xacro_args" default="" />
+  <arg name="robot_name" default="penguin">
 
-  <param name="robot_description" command="$(find xacro)/xacro $(find franka_description)/robots/$(arg robot)/$(arg robot).urdf.xacro hand:=$(arg load_gripper) arm_id:=$(arg arm_id) $(arg xacro_args)"/>
+  <param name="robot_description" command="$(find xacro)/xacro '$(find shokunin_description)/xacros/robots/robot.xacro'
+        prefix:='$(arg robot_name)_robot/'
+        arm_type:='panda'
+        gripper_type:=$(arg gripper_type)
+        finger_type:=$(arg finger_type)" />
 
   <include file="$(find franka_gripper)/launch/franka_gripper.launch" if="$(arg load_gripper)">
     <arg name="robot_ip" value="$(arg robot_ip)" />
