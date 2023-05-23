@@ -56,8 +56,11 @@ class TrajectoryClient:
 
         point = JointTrajectoryPoint()
         point.positions = self.start_p
-        point.time_from_start = rospy.Duration(3.0)
+        point.time_from_start = rospy.Duration(5.0)
+        point.velocities = [0]*len(self.start_p)
         goal.trajectory.points.append(point)
+        goal.goal_time_tolerance = rospy.Duration.from_sec(0.5)
+
         input("press enter to move the robot to the start position")
         trajectory_client.send_goal(goal)
         trajectory_client.wait_for_result()
