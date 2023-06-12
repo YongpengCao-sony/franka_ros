@@ -4,6 +4,7 @@ import argparse
 import math
 import os
 import sys
+from copy import deepcopy
 
 import rospy
 import yaml
@@ -24,6 +25,54 @@ JOINT_NAMES = [
 ]
 
 
+def traj_transformation(traj):
+    if len(traj['points'][0]) > 6:
+        rospy.loginfo("Input is trajectory of Panda robot")
+        panda_pplist = []
+        for point in traj['points']:
+            panda_pp = ur_transform_point(point['positions'])
+            panda_pplist.append(deepcopy(panda_pp))
+    else:
+        rospy.loginfo("Input is the trajectory of UR robot")
+        ur_pplist = []
+        for point in traj['points']:
+            ur_pp = panda_transform_point(point['positions'])
+            ur_pplist.append(deepcopy(ur_pp))
+
+    return ur_pplist
+
+
+def ur_transform_point(ur_position):
+    if len(ur_position) > 6:
+        rospy.loginfo("waypoint format is wrong")
+        sys.exit(-1)
+    panda_position = []
+    panda_position.append(ur_position[0])
+    panda_position.append(ur_position[1] + math.pi / 2)
+    panda_position.append(0.00)
+    panda_position.append(-ur_position[2])
+    panda_position.append(ur_position[4] + math.pi / 2)
+    panda_position.append(-ur_position[3])
+    panda_position.append(ur_position[5] + math.pi)
+
+    return panda_position
+
+
+def panda_transform_point(panda_position):
+    if len(panda_position) <= 6:
+        rospy.loginfo("waypoint format is wrong")
+        sys.exit(-1)
+    ur_position = []
+    ur_position.append(panda_position[0])
+    ur_position.append(panda_position[1] - math.pi / 2)
+    ur_position.append(-panda_position[2])
+    ur_position.append(panda_position[4] - math.pi / 2)
+    ur_position.append(-panda_position[3])
+    ur_position.append(panda_position[5] - math.pi)
+
+    return ur_position
+
+
 class TrajectoryClient:
     """for trajectory following"""
 
@@ -32,10 +81,6 @@ class TrajectoryClient:
         self.traj_date = rospy.get_param(rospy.resolve_name('~traj_date'))
         self.traj_robot = rospy.get_param(rospy.resolve_name('~traj_robot'))
         self.traj_name = rospy.get_param(rospy.resolve_name('~traj_name'))
-        if self.traj_name != 'panda':
-            rospy.loginfo("Make sure it is intended to run UR trajectory under panda robot! ")
-            input("press enter to continue or ctrl+c to exit")
-
         self.traj_speed = rospy.get_param(rospy.resolve_name('~traj_speed'))
         self.traj_path = rospy.get_param(rospy.resolve_name('~traj_path'))
 
@@ -51,27 +96,18 @@ class TrajectoryClient:
         ) as file:
             prime_service = yaml.safe_load(file)
 
-        self.traj = message_converter.convert_dictionary_to_ros_message(
-            'trajectory_msgs/JointTrajectory', prime_service
-        )
         self.start_p = prime_service['points'][0]['positions']
         # print("the start position of the loaded yaml file is ", start_p)
         # self.start_p = self.ur_transform(self.start_p)
+        if (self.traj_name != 'panda') | (len(prime_service['points'][0]) > 6):
+            rospy.loginfo("Make sure it is intended to run UR trajectory under panda robot! ")
+            input("press enter to continue or ctrl+c to exit")
+            self.start_p = ur_transform_point(self.start_p)
+            prime_service = traj_transformation()
 
-    def ur_transform(ur_position):
-        if len(ur_position) > 6:
-            rospy.loginfo("waypoint format is wrong")
-            sys.exit(-1)
-        panda_position = []
-        panda_position.append(ur_position[0])
-        panda_position.append(ur_position[1] + math.pi / 2)
-        panda_position.append(0.00)
-        panda_position.append(-ur_position[2])
-        panda_position.append(ur_position[4] + math.pi / 2)
-        panda_position.append(-ur_position[3])
-        panda_position.append(ur_position[5] + math.pi)
-
-        return panda_position
+        self.traj = message_converter.convert_dictionary_to_ros_message(
+            'trajectory_msgs/JointTrajectory', prime_service
+        )
 
     def send_recorded_joint_trajectory(self):
         # make sure the correct controller is loaded and activated
