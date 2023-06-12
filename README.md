@@ -1,3 +1,9 @@
+## prompt for trajectory following
+
+`roslaunch franka_example_controllers follow_franka_traj.launch traj_date:=20230609 traj_robot:=panda traj_name:=20z traj_speed:=100`
+
+other flags can just go with default
+
 # ROS integration for Franka Emika research robots
 
 [![CI](https://github.com/frankaemika/franka_ros/actions/workflows/ci.yml/badge.svg)](https://github.com/frankaemika/franka_ros/actions/workflows/ci.yml)
