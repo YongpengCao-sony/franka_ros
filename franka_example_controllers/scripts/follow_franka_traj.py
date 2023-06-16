@@ -99,7 +99,7 @@ class TrajectoryClient:
         self.start_p = prime_service['points'][0]['positions']
         # print("the start position of the loaded yaml file is ", start_p)
         # self.start_p = self.ur_transform(self.start_p)
-        if (self.traj_name != 'panda') or (len(prime_service['points'][0]) <= 6):
+        if (self.traj_robot != 'panda') or (len(prime_service['points'][0]) <= 6):
             rospy.loginfo("Make sure it is intended to run UR trajectory under panda robot! ")
             input("press enter to continue or ctrl+c to exit")
             self.start_p = ur_transform_point(self.start_p)
