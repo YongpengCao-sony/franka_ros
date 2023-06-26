@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<launch>
+  <arg name="robot_ip" default="192.168.15.203"/>
+  <arg name="arm_id" default="panda" />
+  <arg name="transmission" default="position" doc="The type of position control to use (either 'position' or 'effort')" />
+  <!-- <arg name="traj_date" default="20230522" />
+  <arg name="traj_robot" default="panda" />
+  <arg name="traj_name" default="150d" />
+  <arg name="traj_speed" default="10" />
+  <arg name="traj_path" default="$(find franka_control)/config/" /> -->
+
+  <include file="$(find franka_control)/launch/franka_control.launch" pass_all_args="true">
+    <arg name="load_gripper" value="false" />
+  </include>
+
+  <node name="controller_spawner"
+        pkg="controller_manager"
+        type="spawner"
+        respawn="false"
+        output="screen"
+        args="$(arg transmission)_joint_trajectory_controller">
+  </node>
+
+  <node name="hand_state_publisher"
+        pkg="franka_example_controllers"
+        type="hand_state_publisher"
+        output="screen"
+        required="true">
+        <!-- args="$(arg traj_path) $(arg traj_date) $(arg traj_robot) $(arg traj_name) " -->
+    <rosparam file="$(find franka_control)/config/start_pose.yaml" subst_value="true" />
+    <remap from="~follow_joint_trajectory" to="$(arg transmission)_joint_trajectory_controller/follow_joint_trajectory" />
+    <remap from="~joint_states" to="franka_state_controller/joint_states" />
+    <param name="max_dq" value="0.2" /> <!-- [rad/s] -->
+    <!-- <param name="traj_date" value="$(arg traj_date)" /> 
+    <param name="traj_robot" value="$(arg traj_robot)" /> 
+    <param name="traj_name" value="$(arg traj_name)" /> 
+    <param name="traj_speed" value="$(arg traj_speed)" /> 
+    <param name="traj_path" value="$(arg traj_path)" />  -->
+  </node>
+
+</launch>
