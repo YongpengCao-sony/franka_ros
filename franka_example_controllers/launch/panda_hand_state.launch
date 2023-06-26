@@ -23,7 +23,7 @@
 
   <node name="hand_state_publisher"
         pkg="franka_example_controllers"
-        type="hand_state_publisher"
+        type="hand_state_publisher.py"
         output="screen"
         required="true">
         <!-- args="$(arg traj_path) $(arg traj_date) $(arg traj_robot) $(arg traj_name) " -->
