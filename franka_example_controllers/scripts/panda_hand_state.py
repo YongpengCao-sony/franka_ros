@@ -51,6 +51,7 @@ class MoveGroupPythonInterface(object):
         print(robot.get_current_state())
 
     def get_current_link_state(self):
+        pass
 
 
 class TrajectoryClient:
