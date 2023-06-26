@@ -13,14 +13,6 @@
     <arg name="load_gripper" value="false" />
   </include>
 
-  <node name="controller_spawner"
-        pkg="controller_manager"
-        type="spawner"
-        respawn="false"
-        output="screen"
-        args="$(arg transmission)_joint_trajectory_controller">
-  </node>
-
   <node name="hand_state_publisher"
         pkg="franka_example_controllers"
         type="panda_hand_state.py"
