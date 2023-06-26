@@ -38,7 +38,7 @@ class MoveGroupPythonInterface(object):
         rospy.init_node("move_group_python_interface")
 
         robot = moveit_commander.RobotCommander()
-        group_name = "penguin_robot"
+        group_name = "panda_arm"
         move_group = moveit_commander.MoveGroupCommander(group_name)
         eef_link = move_group.get_end_effector_link()
         print("============ End effector link: %s" % eef_link)
