@@ -26,4 +26,18 @@
     <rosparam unless="$(arg load_gripper)" param="source_list">[franka_state_controller/joint_states] </rosparam>
     <param name="rate" value="30"/>
   </node>
+
+  <!-- By default use joint position controllers -->
+  <arg name="transmission" default="position" />
+  <!-- Start ROS controllers -->
+  <include file="$(find panda_moveit_config)/launch/ros_controllers.launch" pass_all_args="true" />
+
+  <!-- as well as MoveIt demo -->
+  <include file="$(find panda_moveit_config)/launch/demo.launch" pass_all_args="true">
+    <!-- robot description is loaded by franka_control.launch -->
+    <arg name="load_robot_description" value="false" />
+    <!-- MoveItSimpleControllerManager provides ros_control's JointTrajectory controllers
+         as well as GripperCommand actions -->
+    <arg name="moveit_controller_manager" value="simple" />
+  </include>
 </launch>
