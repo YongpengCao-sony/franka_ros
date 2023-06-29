@@ -18,9 +18,9 @@
         type="spawner"
         respawn="false"
         output="screen"
-        args="$(arg transmission)_joint_trajectory_controller">
+        args="$(arg transmission)_joint_trajectory_controller elbow_example_controller">
   </node>
-
+  
   <node name="traj_follow"
         pkg="franka_example_controllers"
         type="follow_franka_traj.py"
