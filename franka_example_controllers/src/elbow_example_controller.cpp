@@ -80,12 +80,12 @@ void ElbowExampleController::update(const ros::Time& /* time */, const ros::Dura
   auto pose = initial_pose_;
   // auto posef = initial_posef_;
 
-  ROS_INFO("log elbow joint 1:%d", elbow[0]);
-  ROS_INFO("log elbow joint 2:%d", elbow[1]);
-  ROS_INFO("log elbow joint 3:%d", elbow[2]);
-  ROS_INFO("log EE pose 1:%d", pose[0]);
-  ROS_INFO("log EE pose 2:%d", pose[1]);
-  ROS_INFO("log EE pose 3:%d", pose[2]);
+  ROS_INFO("log elbow joint 1:%f", elbow[0]);
+  ROS_INFO("log elbow joint 2:%f", elbow[1]);
+  ROS_INFO("log elbow joint 3:%f", elbow[2]);
+  ROS_INFO("log EE pose 1:%f", pose[0]);
+  ROS_INFO("log EE pose 2:%f", pose[1]);
+  ROS_INFO("log EE pose 3:%f", pose[2]);
   // ROS_INFO("log EE flange pose 1:%d", posef[0]);
   //  elbow[0] += angle;
 
