@@ -66,7 +66,7 @@ bool ElbowExampleController::init(hardware_interface::RobotHW* robot_hardware,
 
 void ElbowExampleController::starting(const ros::Time& /* time */) {
   initial_pose_ = cartesian_pose_handle_->getRobotState().O_T_EE_d;
-  initial_posef_ = cartesian_pose_handle_->getRobotState().F_T_EE;
+  //initial_posef_ = cartesian_pose_handle_->getRobotState().F_T_EE;
   initial_elbow_ = cartesian_pose_handle_->getRobotState().elbow_d;
   elapsed_time_ = ros::Duration(0.0);
 }
@@ -77,11 +77,11 @@ void ElbowExampleController::update(const ros::Time& /* time */, const ros::Dura
   double angle = M_PI / 10.0 * (1.0 - std::cos(M_PI / 5.0 * elapsed_time_.toSec()));
   auto elbow = initial_elbow_;
   auto pose = initial_pose_;
-  auto posef = initial_posef_;
+  //auto posef = initial_posef_;
 
   ROS_INFO("log elbow joint 1:%d", elbow[0]);
   ROS_INFO("log EE pose 1:%d", pose[0]);
-  ROS_INFO("log EE flange pose 1:%d", posef[0]);
+  //ROS_INFO("log EE flange pose 1:%d", posef[0]);
   // elbow[0] += angle;
 
   cartesian_pose_handle_->setCommand(initial_pose_, elbow);
