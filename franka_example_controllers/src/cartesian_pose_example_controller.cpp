@@ -81,30 +81,36 @@ void CartesianPoseExampleController::update(const ros::Time& /* time */,
                                             const ros::Duration& period) {
   elapsed_time_ += period;
 
-  if (elapsed_time_ >= ros::Duration(2.0)) {
+  if (elapsed_time_ <= ros::Duration(2.0)) {
+    double disired_dist_x = 0.0;
+    double disired_dist_y = 0.1;
+    double disired_dist_z = 0.0;
+
+    double angle = (1 - std::cos(M_PI / 2.0 * elapsed_time_.toSec())) / 2;  // M_PI / 4 *
+    // double delta_x = radius * std::sin(angle);
+    double delta_x = disired_dist_x * angle;
+    double delta_y = disired_dist_y * angle;
+    double delta_z = disired_dist_z * angle;
+
+    // double delta_z = radius * (std::cos(angle) - 1);
+    std::array<double, 16> new_pose = initial_pose_;
+
+    new_pose[12] -= delta_x;
+    new_pose[13] -= delta_y;
+    new_pose[14] -= delta_z;
+    cartesian_pose_handle_->setCommand(new_pose);
+  } else {
     ROS_INFO("Current EE pose x:%f", (cartesian_pose_handle_->getRobotState().O_T_EE_d)[12]);
     ROS_INFO("Current EE pose y:%f", (cartesian_pose_handle_->getRobotState().O_T_EE_d)[13]);
     ROS_INFO("Current EE pose z:%f", (cartesian_pose_handle_->getRobotState().O_T_EE_d)[14]);
-    return;
+    stopping(ros::Time::now());
   }
+}
 
-  double disired_dist_x = 0.0;
-  double disired_dist_y = 0.1;
-  double disired_dist_z = 0.0;
-
-  double angle = (1 - std::cos(M_PI / 2.0 * elapsed_time_.toSec())) / 2;  // M_PI / 4 *
-  // double delta_x = radius * std::sin(angle);
-  double delta_x = disired_dist_x * angle;
-  double delta_y = disired_dist_y * angle;
-  double delta_z = disired_dist_z * angle;
-
-  // double delta_z = radius * (std::cos(angle) - 1);
-  std::array<double, 16> new_pose = initial_pose_;
-
-  new_pose[12] -= delta_x;
-  new_pose[13] -= delta_y;
-  new_pose[14] -= delta_z;
-  cartesian_pose_handle_->setCommand(new_pose);
+void CartesianVelocityExampleController::stopping(const ros::Time& /*time*/) {
+  // WARNING: DO NOT SEND ZERO VELOCITIES HERE AS IN CASE OF ABORTING DURING MOTION
+  // A JUMP TO ZERO WILL BE COMMANDED PUTTING HIGH LOADS ON THE ROBOT. LET THE DEFAULT
+  // BUILT-IN STOPPING BEHAVIOR SLOW DOWN THE ROBOT.
 }
 
 }  // namespace franka_example_controllers
