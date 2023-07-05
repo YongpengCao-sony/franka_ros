@@ -107,7 +107,7 @@ void CartesianPoseExampleController::update(const ros::Time& /* time */,
   }
 }
 
-void CartesianVelocityExampleController::stopping(const ros::Time& /*time*/) {
+void CartesianPoseExampleController::stopping(const ros::Time& /*time*/) {
   // WARNING: DO NOT SEND ZERO VELOCITIES HERE AS IN CASE OF ABORTING DURING MOTION
   // A JUMP TO ZERO WILL BE COMMANDED PUTTING HIGH LOADS ON THE ROBOT. LET THE DEFAULT
   // BUILT-IN STOPPING BEHAVIOR SLOW DOWN THE ROBOT.
