@@ -34,6 +34,7 @@ bool CartesianPoseExampleController::init(hardware_interface::RobotHW* robot_har
   std::string a;
   node_handle.getParam("x_axis_dist", a);
   std::cout << "current x axis dist: " << a << std::endl;
+  std::cout << "arm_id is : " << arm_id << std::endl;
 
   try {
     cartesian_pose_handle_ = std::make_unique<franka_hw::FrankaCartesianPoseHandle>(
