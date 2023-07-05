@@ -92,6 +92,8 @@ void CartesianPoseExampleController::update(const ros::Time& /* time */,
     abort();
   }
 
+  std::cout << "current x axis dist: " << x_axis_dist_ << std::endl;
+
   double disired_dist_x = x_axis_dist_;
   double disired_dist_y = y_axis_dist_;
   double disired_dist_z = z_axis_dist_;
