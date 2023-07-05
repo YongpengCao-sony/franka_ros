@@ -29,7 +29,6 @@ class CartesianPoseExampleController
   std::unique_ptr<franka_hw::FrankaCartesianPoseHandle> cartesian_pose_handle_;
   ros::Duration elapsed_time_;
   std::array<double, 16> initial_pose_{};
-  double x_axis_dist_, y_axis_dist_, z_axis_dist_;
 };
 
 }  // namespace franka_example_controllers
