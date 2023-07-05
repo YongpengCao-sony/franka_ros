@@ -31,7 +31,7 @@ bool CartesianPoseExampleController::init(hardware_interface::RobotHW* robot_har
     return false;
   }
 
-  double a;
+  std::string a;
   if (!node_handle.getParam("x_axis_dist", a)) {
     ROS_ERROR("CartesianPoseExampleController: Could not get parameter a");
     return false;
