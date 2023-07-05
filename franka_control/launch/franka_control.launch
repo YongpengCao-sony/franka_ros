@@ -31,7 +31,7 @@
   <!-- <arg name="transmission" default="position" /> -->
 
   <!-- Start ROS controllers -->
-  <include file="$(find panda_moveit_config)/launch/ros_controllers.launch" pass_all_args="true" />
+  <!-- <include file="$(find panda_moveit_config)/launch/ros_controllers.launch" pass_all_args="true" /> -->
   <!-- as well as MoveIt demo -->
   <!-- <include file="$(dirname)/demo.launch" pass_all_args="true"> -->
     <!-- robot description is loaded by franka_control.launch -->
