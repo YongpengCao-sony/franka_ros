@@ -34,6 +34,7 @@ bool CartesianPoseExampleController::init(hardware_interface::RobotHW* robot_har
   node_handle.getParam("x_axis_dist", x_axis_dist_);
   node_handle.getParam("y_axis_dist", y_axis_dist_);
   node_handle.getParam("z_axis_dist", z_axis_dist_);
+  std::cout << "current x axis dist: " << x_axis_dist_ << std::endl;
 
   try {
     cartesian_pose_handle_ = std::make_unique<franka_hw::FrankaCartesianPoseHandle>(
@@ -91,8 +92,6 @@ void CartesianPoseExampleController::update(const ros::Time& /* time */,
     ROS_INFO("Current EE pose z:%f", (cartesian_pose_handle_->getRobotState().O_T_EE_d)[14]);
     abort();
   }
-
-  std::cout << "current x axis dist: " << x_axis_dist_ << std::endl;
 
   double disired_dist_x = x_axis_dist_;
   double disired_dist_y = y_axis_dist_;
