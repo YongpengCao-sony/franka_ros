@@ -31,16 +31,12 @@ bool CartesianPoseExampleController::init(hardware_interface::RobotHW* robot_har
     return false;
   }
 
-  // std::string x_axis_dist;
-  // if (!node_handle.getParam("x_axis_dist", x_axis_dist)) {
-  //   ROS_ERROR("CartesianPoseExampleController: Could not get parameter arm_id");
-  //   return false;
-  // }
-  // std::string b;
-
-  // node_handle.getParam("robot", b);
-  // std::cout << "current x axis dist: " << x_axis_dist << std::endl;
-  std::cout << "arm_id is : " << arm_id << std::endl;
+  double a;
+  if (!node_handle.getParam("x_axis_dist", a)) {
+    ROS_ERROR("CartesianPoseExampleController: Could not get parameter a");
+    return false;
+  }
+  std::cout << "now what!" << a << std::endl;
 
   try {
     cartesian_pose_handle_ = std::make_unique<franka_hw::FrankaCartesianPoseHandle>(
