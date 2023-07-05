@@ -76,9 +76,9 @@ void CartesianPoseExampleController::starting(const ros::Time& /* time */) {
   ROS_INFO("Start EE pose y:%f", initial_pose_[13]);
   ROS_INFO("Start EE pose z:%f", initial_pose_[14]);
 
-  double start_pose_x = initial_pose_[12];
-  double start_pose_y = initial_pose_[13];
-  double start_pose_z = initial_pose_[14];
+  double start_pose_x_ = initial_pose_[12];
+  double start_pose_y_ = initial_pose_[13];
+  double start_pose_z_ = initial_pose_[14];
 }
 
 void CartesianPoseExampleController::update(const ros::Time& /* time */,
@@ -104,11 +104,11 @@ void CartesianPoseExampleController::update(const ros::Time& /* time */,
   ROS_INFO("Current EE pose z:%f", (cartesian_pose_handle_->getRobotState().O_T_EE_d)[14]);
 
   ROS_INFO("EE pose x changed:%f",
-           (cartesian_pose_handle_->getRobotState().O_T_EE_d)[12] - start_pose_x);
+           (cartesian_pose_handle_->getRobotState().O_T_EE_d)[12] - start_pose_x_);
   ROS_INFO("EE pose y changed:%f",
-           (cartesian_pose_handle_->getRobotState().O_T_EE_d)[13] - start_pose_y);
+           (cartesian_pose_handle_->getRobotState().O_T_EE_d)[13] - start_pose_y_);
   ROS_INFO("EE pose z changed:%f",
-           (cartesian_pose_handle_->getRobotState().O_T_EE_d)[14] - start_pose_z);
+           (cartesian_pose_handle_->getRobotState().O_T_EE_d)[14] - start_pose_z_);
 }
 
 }  // namespace franka_example_controllers
