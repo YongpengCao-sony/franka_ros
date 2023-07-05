@@ -31,6 +31,10 @@ bool CartesianPoseExampleController::init(hardware_interface::RobotHW* robot_har
     return false;
   }
 
+  node_handle.getParam("x_axis_dist", x_axis_dist_);
+  node_handle.getParam("y_axis_dist", y_axis_dist_);
+  node_handle.getParam("z_axis_dist", z_axis_dist_);
+
   try {
     cartesian_pose_handle_ = std::make_unique<franka_hw::FrankaCartesianPoseHandle>(
         cartesian_pose_interface_->getHandle(arm_id + "_robot"));
@@ -88,27 +92,23 @@ void CartesianPoseExampleController::update(const ros::Time& /* time */,
     abort();
   }
 
-  double disired_dist = 0.10;
-  double angle = M_PI / 4 * (1 - std::cos(M_PI / 2.0 * elapsed_time_.toSec()));
+  double disired_dist_x = x_axis_dist_;
+  double disired_dist_y = y_axis_dist_;
+  double disired_dist_z = z_axis_dist_;
+
+  double angle = (1 - std::cos(M_PI / 2.0 * elapsed_time_.toSec()));  // M_PI / 4 *
   // double delta_x = radius * std::sin(angle);
+  double delta_x = disired_dist_x * angle;
+  double delta_y = disired_dist_y * angle;
+  double delta_z = disired_dist_z * angle;
+
   // double delta_z = radius * (std::cos(angle) - 1);
-  double delta_y = disired_dist * angle;
   std::array<double, 16> new_pose = initial_pose_;
 
+  new_pose[12] -= delta_x;
   new_pose[13] -= delta_y;
-  // new_pose[14] -= delta_z;
+  new_pose[14] -= delta_z;
   cartesian_pose_handle_->setCommand(new_pose);
-
-  // ROS_INFO("Current EE pose x:%f", (cartesian_pose_handle_->getRobotState().O_T_EE_d)[12]);
-  // ROS_INFO("Current EE pose y:%f", (cartesian_pose_handle_->getRobotState().O_T_EE_d)[13]);
-  // ROS_INFO("Current EE pose z:%f", (cartesian_pose_handle_->getRobotState().O_T_EE_d)[14]);
-
-  // ROS_INFO("EE pose x changed:%f",
-  //          (cartesian_pose_handle_->getRobotState().O_T_EE_d)[12] - start_pose_x_);
-  // ROS_INFO("EE pose y changed:%f",
-  //          (cartesian_pose_handle_->getRobotState().O_T_EE_d)[13] - start_pose_y_);
-  // ROS_INFO("EE pose z changed:%f",
-  //          (cartesian_pose_handle_->getRobotState().O_T_EE_d)[14] - start_pose_z_);
 }
 
 }  // namespace franka_example_controllers
