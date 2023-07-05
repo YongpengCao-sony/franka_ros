@@ -104,8 +104,7 @@ void CartesianPoseExampleController::update(const ros::Time& /* time */,
     ROS_INFO("Current EE pose y:%f", (cartesian_pose_handle_->getRobotState().O_T_EE_d)[13]);
     ROS_INFO("Current EE pose z:%f", (cartesian_pose_handle_->getRobotState().O_T_EE_d)[14]);
     stopping(ros::Time::now());
-    abort();
-  }
+    }
 }
 
 void CartesianPoseExampleController::stopping(const ros::Time& /*time*/) {
