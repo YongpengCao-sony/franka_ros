@@ -2,7 +2,7 @@
 <launch>
   <arg name="robot" default="panda" doc="choose your robot. Possible values: [panda, fr3]"/>
   <arg name="arm_id" default="$(arg robot)" />
-  <arg name="x_axis_dist" default="0.10" />
+  <arg name="x_axis_dist" default="robot" />
   <arg name="y_axis_dist" default="0.10" />
   <arg name="z_axis_dist" default="0.10" />
 
