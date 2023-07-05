@@ -85,7 +85,7 @@ void CartesianPoseExampleController::update(const ros::Time& /* time */,
     ROS_INFO("Current EE pose x:%f", (cartesian_pose_handle_->getRobotState().O_T_EE_d)[12]);
     ROS_INFO("Current EE pose y:%f", (cartesian_pose_handle_->getRobotState().O_T_EE_d)[13]);
     ROS_INFO("Current EE pose z:%f", (cartesian_pose_handle_->getRobotState().O_T_EE_d)[14]);
-    return false;
+    abort();
   }
 
   double disired_dist = 0.10;
