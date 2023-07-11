@@ -26,6 +26,8 @@ bool CartesianPoseExampleController::init(hardware_interface::RobotHW* robot_har
   }
 
   std::string arm_id;
+  sub_ = node_handle.subscribe("/move_group/fake_controller_joint_states", 1, &CartesianPoseExampleController::JointPoseCb, this);
+
   if (!node_handle.getParam("arm_id", arm_id)) {
     ROS_ERROR("CartesianPoseExampleController: Could not get parameter arm_id");
     return false;
@@ -111,6 +113,26 @@ void CartesianPoseExampleController::stopping(const ros::Time& /*time*/) {
   // WARNING: DO NOT SEND ZERO VELOCITIES HERE AS IN CASE OF ABORTING DURING MOTION
   // A JUMP TO ZERO WILL BE COMMANDED PUTTING HIGH LOADS ON THE ROBOT. LET THE DEFAULT
   // BUILT-IN STOPPING BEHAVIOR SLOW DOWN THE ROBOT.
+}
+
+void CartesianPoseExampleController::JointPoseCb(const sensor_msgs::JointState& msg)
+{
+  // if (!msg->header.frame_id.empty() && msg->header.frame_id != this->root_frame_)
+  // {
+  //   ROS_WARN_STREAM("Reference poses need to be in the root frame '" << this->root_frame_ << "'. Ignoring.");
+  //   return;
+  // }
+  std::vector<double> positions= msg.position;
+  ROS_INFO("Current fake position is:%f", (positions[1]));
+  // const Eigen::Quaterniond last_orientation_d_target(this->orientation_d_);
+  // Eigen::Quaterniond orientation_d;
+  // orientation_d.coeffs() << msg->pose.orientation.x, msg->pose.orientation.y, msg->pose.orientation.z,
+  //     msg->pose.orientation.w;
+  // if (last_orientation_d_target.coeffs().dot(this->orientation_d_.coeffs()) < 0.0)
+  // {
+  //   this->orientation_d_.coeffs() << -this->orientation_d_.coeffs();
+  // }
+  // this->setReferencePose(position_d, orientation_d);
 }
 
 }  // namespace franka_example_controllers

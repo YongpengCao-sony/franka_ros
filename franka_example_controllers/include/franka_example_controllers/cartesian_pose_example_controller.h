@@ -11,6 +11,8 @@
 #include <hardware_interface/robot_hw.h>
 #include <ros/node_handle.h>
 #include <ros/time.h>
+#include <sensor_msgs/JointState.h>
+
 
 #include <franka_hw/franka_cartesian_command_interface.h>
 
@@ -24,12 +26,14 @@ class CartesianPoseExampleController
   void starting(const ros::Time&) override;
   void update(const ros::Time&, const ros::Duration& period) override;
   void stopping(const ros::Time&) override;
+  void JointPoseCb(const sensor_msgs::JointState& msg);
 
  private:
   franka_hw::FrankaPoseCartesianInterface* cartesian_pose_interface_;
   std::unique_ptr<franka_hw::FrankaCartesianPoseHandle> cartesian_pose_handle_;
   ros::Duration elapsed_time_;
   std::array<double, 16> initial_pose_{};
+  ros::Subscriber sub_;
 };
 
 }  // namespace franka_example_controllers
