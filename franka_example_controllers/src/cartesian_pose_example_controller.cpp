@@ -26,7 +26,7 @@ bool CartesianPoseExampleController::init(hardware_interface::RobotHW* robot_har
   }
 
   std::string arm_id;
-  sub_ = node_handle.subscribe("/move_group/fake_controller_joint_states", 1, &CartesianPoseExampleController::JointPoseCb, this);
+  sub_ = node_handle.subscribe("/move_group/fake_controller_joint_states", 10, &CartesianPoseExampleController::JointPoseCb, this);
 
   if (!node_handle.getParam("arm_id", arm_id)) {
     ROS_ERROR("CartesianPoseExampleController: Could not get parameter arm_id");
@@ -83,7 +83,7 @@ void CartesianPoseExampleController::update(const ros::Time& /* time */,
                                             const ros::Duration& period) {
   elapsed_time_ += period;
 
-  if (elapsed_time_ <= ros::Duration(2.0)) {
+  if (elapsed_time_ <= ros::Duration(4.0)) {
     double disired_dist_x = 0.0;
     double disired_dist_y = 0.0;
     double disired_dist_z = 0.1;
@@ -101,7 +101,27 @@ void CartesianPoseExampleController::update(const ros::Time& /* time */,
     new_pose[13] -= delta_y;
     new_pose[14] -= delta_z;
     cartesian_pose_handle_->setCommand(new_pose);
-  } else {
+  } 
+  else if (elapsed_time_ <= ros::Duration(8.0)){
+    double disired_dist_x = 0.0;
+    double disired_dist_y = 0.1;
+    double disired_dist_z = 0.0;
+
+    double angle = (1 - std::cos(M_PI / 2.0 * elapsed_time_.toSec())) / 2;  // M_PI / 4 *
+    // double delta_x = radius * std::sin(angle);
+    double delta_x = disired_dist_x * angle;
+    double delta_y = disired_dist_y * angle;
+    double delta_z = disired_dist_z * angle;
+
+    // double delta_z = radius * (std::cos(angle) - 1);
+    std::array<double, 16> new_pose = initial_pose_;
+
+    new_pose[12] -= delta_x;
+    new_pose[13] -= delta_y;
+    new_pose[14] -= delta_z;
+    cartesian_pose_handle_->setCommand(new_pose);    
+  }
+  else {
     ROS_INFO("Current EE pose x:%f", (cartesian_pose_handle_->getRobotState().O_T_EE_d)[12]);
     ROS_INFO("Current EE pose y:%f", (cartesian_pose_handle_->getRobotState().O_T_EE_d)[13]);
     ROS_INFO("Current EE pose z:%f", (cartesian_pose_handle_->getRobotState().O_T_EE_d)[14]);
